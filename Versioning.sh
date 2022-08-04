@@ -12,6 +12,9 @@
 # This will be the default version number for new projects
 # Projects not using a three-part numbering scheme will be moved to one
 VER_DEFAULT=0.1.0
+EPOCH_TIME=`date +%s`
+TMP_DIR=/tmp
+EPOCH_FILE=$TMP_DIR/epoch.txt
 
 ### Shared functions
 
@@ -95,7 +98,7 @@ echo "Project file:     ${PROJECT_FILE}"
 echo "Workspace path:   ${WORKSPACE_PATH}"
 echo ""
 
-# Populate the date variable
+# Populate the date variable
 DATE=`date +%Y-%m-%d`
 
 # Exit the script when a command fails or if it tries to use an undeclared variable
@@ -105,7 +108,7 @@ set -o nounset
 # Temporarily enable script debugging output
 #set -x
 
-# Obtain the current application version
+# Obtain the current application version
 VERSION=$(agvtool what-marketing-version -terse1)
 
 # If version number empty send warning, use alternate code path
@@ -115,11 +118,17 @@ if [ -z "$VERSION" ]; then
     echo "Warning: agvtool could not enumerate current application version string"
     echo ""
 
-    # Example below of version stored in ${PROJECT_FILE}
+    # Example below of version stored in ${PROJECT_FILE}
     # MARKETING_VERSION = 0.1;
 
     # Alternate code path for recent Xcode versions
     VERSION=`grep MARKETING_VERSION "$PROJECT_FILE" | tail -n 1 | awk '{print $3}' | sed 's:;::'`
+    if [ -z "$VERSION" ]; then
+        echo "Unable to get version from project.pbxproj file"; exit 1
+    else
+        echo "Version retrieved from project.pbxproj file: $VERSION"
+        echo ""
+    fi
 fi
 
 if [ $# -eq 1 ] && [ $1 == "archive" ]; then
@@ -148,13 +157,28 @@ NEW_BUILD="${NEW_BUILD_NUMBER}.${SHORT_COMMIT}"
 
 # Append git dirty flag, if necessary
 if [[ `git status --porcelain` ]]; then
-    NEW_BUILD="$NEW_BUILD.1"
-else
-    NEW_BUILD="$NEW_BUILD.0"
+    NEW_BUILD="$NEW_BUILD.dirty"
 fi
 
-# Set new build version
-agvtool new-version -all ${NEW_BUILD} > /dev/null 2>&1
+### Set new build version
+
+# Performed conditionally, only if the last build was over sixty seconds ago
+if [ -f $EPOCH_FILE ]; then
+    LAST_RUN=`cat $EPOCH_FILE`
+    ELAPSED=`expr $EPOCH_TIME - $LAST_RUN`
+    echo "Invocation time since UNIX epoch: $EPOCH_TIME"
+    echo "Time elapsed since last build attempt: $ELAPSED"
+    echo ""
+    if [ $ELAPSED -gt 60 ]; then
+        echo $EPOCH_TIME > $EPOCH_FILE
+        agvtool new-version -all ${NEW_BUILD} > /dev/null 2>&1
+    fi
+else
+    echo $EPOCH_TIME > $EPOCH_FILE
+    echo "Invocation time since UNIX epoch: $EPOCH_TIME"
+    echo ""
+    agvtool new-version -all ${NEW_BUILD} > /dev/null 2>&1
+fi
 
 # Display/print build versioning
 echo "### Build Version ###"
