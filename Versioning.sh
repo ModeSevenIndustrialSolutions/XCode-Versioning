@@ -158,6 +158,8 @@ NEW_BUILD="${NEW_BUILD_NUMBER}.${SHORT_COMMIT}"
 # Append git dirty flag, if necessary
 if [[ `git status --porcelain` ]]; then
     NEW_BUILD="$NEW_BUILD.dirty"
+else
+    NEW_BUILD="$NEW_BUILD.clean"
 fi
 
 ### Set new build version

@@ -38,6 +38,10 @@ e.g.	0.1.0 -> 0.1.1
 
 Every time a build is performed, the version will be created as follows:
 
-12.4ba15baa.0
+12.4ba15baa.clean
 
-...where the first number is the number of builds, the second string is the last eight digits of the GIT commit, and the last number reflects whether the GIT repository is dirty, i.e. whether any code has not yet been commited. A zero represents all outstanding changes have been commited, and where the digit one represents a dirty repo with commits that have not been sent upstream.
+Or:
+
+12.4ba15baa.dirty
+
+...where the first number is the number of builds, the second string is the last eight digits of the GIT commit, and the last label (clean/dirty) reflects whether the local repository has changes not yet commited to the upstream repository. A zero represents all outstanding changes have been commited, and where the digit one represents a dirty repo with commits that have not been sent upstream.
