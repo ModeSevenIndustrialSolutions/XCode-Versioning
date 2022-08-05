@@ -78,12 +78,15 @@ else
     fi
 fi
 
-PROJECT_FILE="$PROJECT_PATH/$PROJECT_NAME.xcodeproj/project.pbxproj"
+# Old version; does not work where app directory != app name
+#PROJECT_FILE="$PROJECT_PATH/$PROJECT_NAME.xcodeproj/project.pbxproj"
+PROJECT_FILE="$PROJECT_PATH/$SCHEME_NAME.xcodeproj/project.pbxproj"
 
 if [ ! -d "$PROJECT_PATH" ] || [ ! -d "$WORKSPACE_PATH" ]; then
     echo "One of the folder paths is invalid; check script operation"; exit 1
 elif [ ! -f "$PROJECT_FILE" ]; then
-    echo "The project file was not found; check script operation"; exit 1
+    echo "The project file was not found; check script operation"
+    echo "The path that failed was: ${PROJECT_FILE}"; exit 1
 fi
 
 if !(grep 'apple-generic' "$PROJECT_FILE" > /dev/null 2>&1)
