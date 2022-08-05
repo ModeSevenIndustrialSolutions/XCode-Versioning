@@ -20,7 +20,7 @@ e.g.	Edit Scheme... -> Build -> Pre-actions -> + -> New Run Script Action
 
 * For the script content, just add the path to the shell script (in your project folder)
 
-"${WORKSPACE_PATH}"/../../Versioning.sh
+"${WORKSPACE_PATH}/../../Scripts/Versioning.sh"
 
 e.g.	Edit Scheme... -> Archive -> Pre-actions -> + -> New Run Script Action
 
