@@ -26,7 +26,7 @@ e.g.	Edit Scheme... -> Archive -> Pre-actions -> + -> New Run Script Action
 
 * For the script content, add the path to the script an add an argument "archive"
 
-"${WORKSPACE_PATH}"/../../Versioning.sh archive
+"${WORKSPACE_PATH}/../../Scripts/Versioning.sh archive"
 
 The first time the script runs, if the project version is set to "1.0" or "1" it will renumber your project to a three part versioning scheme
 
