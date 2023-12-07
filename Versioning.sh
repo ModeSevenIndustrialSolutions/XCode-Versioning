@@ -13,7 +13,7 @@
 
 # This will be the default version number for new projects
 # Projects not using a three-part numbering scheme will be moved to one
-VER_DEFAULT="0.1.0"
+VER_DEFAULT="0.1.1"
 EPOCH_TIME=$(date +%s)
 TMP_DIR="/tmp"
 EPOCH_FILE="$TMP_DIR"/epoch.txt
